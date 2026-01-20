@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finance Demo - Pro</title>
+    <!-- React & DOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <!-- Babel for JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+        :root {
+            /* Default Theme */
+            --bg-color: #f8f9fa;
+            --text-primary: #1a1b1e;
+            --text-secondary: #868e96;
+            --accent-primary: #20c997;
+            --accent-secondary: #63e6be;
+            --light-teal: #e6fcf5;
+            --card-bg: #ffffff;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            --shadow-hover: 0 8px 16px rgba(0, 0, 0, 0.08);
+            --nav-bg: #ffffff;
+            --nav-border: #f1f3f5;
+            --menu-banner-bg-1: #f1f3f5;
+            --pro-badge-bg: #FFF9DB;
+            --pro-badge-text: #FAB005;
+        }
+
+        /* --- THEMES --- */
+
+        /* Space Theme */
+        body.theme-space {
+            --bg-color: #0b0c15;
+            --text-primary: #e0e6ed;
+            --text-secondary: #8b9bb4;
+            --accent-primary: #7048e8;
+            /* Neon Purple */
+            --accent-secondary: #b197fc;
+            --light-teal: #191b2e;
+            /* Darker Surface */
+            --card-bg: #151725;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            /* Stronger shadow */
+            --nav-bg: #151725;
+            --nav-border: #2c2e3f;
+            --menu-banner-bg-1: #191b2e;
+            --pro-badge-bg: #2c2e3f;
+            --pro-badge-text: #ffd43b;
+        }
+
+        /* Gold Theme */
+        body.theme-gold {
+            --bg-color: #1a1814;
+            --text-primary: #fcc419;
+            --text-secondary: #d0b070;
+            --accent-primary: #f08c00;
+            --accent-secondary: #ffd43b;
+            --light-teal: #2e2a24;
+            --card-bg: #242424;
+            --shadow: 0 4px 12px rgba(255, 215, 0, 0.1);
+            --nav-bg: #242424;
+            --nav-border: #44403c;
+            --menu-banner-bg-1: #2e2a24;
+        }
+
+        /* Silver Theme */
+        body.theme-silver {
+            --bg-color: #f1f3f5;
+            --text-primary: #343a40;
+            --text-secondary: #868e96;
+            --accent-primary: #495057;
+            --accent-secondary: #adb5bd;
+            --light-teal: #e9ecef;
+            --card-bg: #ffffff;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            /* More metallic feel */
+            --nav-bg: #f8f9fa;
+            --nav-border: #dee2e6;
+            --menu-banner-bg-1: #e9ecef;
+        }
+
+        /* Skateboard Theme - Gritty/Urban */
+        body.theme-skateboard {
+            --bg-color: #e6e6e6;
+            /* Concrete */
+            --text-primary: #121212;
+            --text-secondary: #555;
+            --accent-primary: #ff0055;
+            /* Hot Pink */
+            --accent-secondary: #212529;
+            /* Grip tape black */
+            --light-teal: #dcdcdc;
+            --card-bg: #f5f5f5;
+            /* Rough paper white */
+            --shadow: 4px 4px 0px rgba(0, 0, 0, 1);
+            /* Hard shadow */
+            --nav-bg: #fff;
+            --nav-border: #000;
+            --radius: 4px;
+            /* Sharper */
+            --btn-radius: 4px;
+        }
+
+        /* Surprise (Cyberpunk/Neon) */
+        body.theme-surprise {
+            --bg-color: #050505;
+            --text-primary: #0ff;
+            /* Cyan */
+            --text-secondary: #f0f;
+            /* Magenta */
+            --accent-primary: #f0f;
+            --accent-secondary: #0ff;
+            --light-teal: #111;
+            --card-bg: #0a0a0a;
+            --shadow: 0 0 10px rgba(0, 255, 255, 0.2), 0 0 20px rgba(255, 0, 255, 0.2);
+            --nav-bg: #000;
+            --nav-border: #333;
+            --menu-banner-bg-1: #111;
+            --radius: 0px;
+            /* Techy */
+            --btn-radius: 0px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        /* Mobile Container */
+        #root {
+            width: 100%;
+            max-width: 414px;
+            background: var(--bg-color);
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Layout Utils */
+        .flex {
+            display: flex;
+        }
+
+        .col {
+            flex-direction: column;
+        }
+
+        .row {
+            flex-direction: row;
+        }
+
+        .between {
+            justify-content: space-between;
+        }
+
+        .center {
+            align-items: center;
+            justifyContent: center;
+        }
+
+        .start {
+            align-items: center;
+            justifyContent: flex-start;
+        }
+
+        .gap-2 {
+            gap: 8px;
+        }
+
+        .gap-4 {
+            gap: 16px;
+        }
+
+        .p-4 {
+            padding: 24px;
+        }
+
+        .mt-4 {
+            margin-top: 16px;
+        }
+
+        .mb-4 {
+            margin-bottom: 16px;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 36px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            line-height: 1.1;
+        }
+
+        h2 {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        h3 {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .balance {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .sub-balance {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        /* Components */
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius, 20px);
+            padding: 16px;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        /* Action Buttons */
+        .circle-btn {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--card-bg);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+            border: 1px solid transparent;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        body.theme-skateboard .circle-btn {
+            border: 2px solid var(--text-primary);
+            box-shadow: 2px 2px 0 var(--text-primary);
+        }
+
+        body.theme-surprise .circle-btn {
+            border: 1px solid var(--accent-primary);
+            box-shadow: 0 0 8px var(--accent-primary);
+            color: var(--accent-primary);
+        }
+
+        .action-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 64px;
+        }
+
+        /* Header Icons */
+        .icon-btn-sm {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            background: var(--card-bg);
+            color: var(--text-primary);
+        }
+
+        /* Discovery Portal Styles */
+        .portal-card {
+            border: 2px dashed var(--text-secondary);
+            background: transparent;
+            cursor: pointer;
+            box-shadow: none;
+            opacity: 0.7;
+        }
+
+        .portal-card:active {
+            transform: scale(0.98);
+        }
+
+        .portal-card.active {
+            border: none;
+            background: var(--card-bg);
+            box-shadow: var(--shadow);
+            opacity: 1;
+        }
+
+        .portal-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--bg-color);
+            display: flex;
+            align-items: center;
+            center;
+            margin-right: 12px;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+
+        /* Joint account pink icon - stays pink unless themed */
+        .account-icon-pink {
+            background: #c2255c;
+            color: white;
+            position: relative;
+        }
+
+        body.theme-space .account-icon-pink {
+            background: var(--accent-primary);
+        }
+
+        body.theme-gold .account-icon-pink {
+            background: var(--accent-primary);
+            color: #000;
+        }
+
+        .badge-count {
+            position: absolute;
+            bottom: -2px;
+            right: -2px;
+            background: white;
+            color: #c2255c;
+            font-size: 10px;
+            font-weight: bold;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Sign Up/Pro Modal */
+        .signup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            animation: fadeIn 0.3s ease;
+            backdrop-filter: blur(4px);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .btn-primary {
+            background: var(--text-primary);
+            color: var(--bg-color);
+            border: none;
+            width: 100%;
+            padding: 16px;
+            border-radius: var(--btn-radius, 12px);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        body.theme-space .btn-primary {
+            background: var(--accent-primary);
+            color: #fff;
+        }
+
+        body.theme-surprise .btn-primary {
+            background: var(--accent-primary);
+            color: #000;
+            box-shadow: 0 0 15px var(--accent-primary);
+            text-shadow: none;
+        }
+
+        /* Chart */
+        .chart-container {
+            height: 160px;
+            width: 100%;
+            position: relative;
+            margin-bottom: 16px;
+            margin-top: 8px;
+        }
+
+        .chart-svg {
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+        }
+
+        /* Menu Screen */
+        .menu-banner {
+            background: var(--menu-banner-bg-1);
+            padding: 24px;
+            border-radius: var(--radius, 24px);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justifyContent: center;
+            min-height: 180px;
+        }
+
+        .menu-item {
+            padding: 16px;
+            background: var(--card-bg);
+            border-radius: var(--radius, 16px);
+            margin-bottom: 12px;
+            display: flex;
+            alignItems: center;
+            justifyContent: space-between;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+            cursor: pointer;
+        }
+
+        .menu-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 12px;
+            color: var(--text-secondary);
+        }
+
+        /* Nav Bar - UPDATED */
+        .nav-bar {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 414px;
+            background: var(--nav-bg);
+            border-top: 1px solid var(--nav-border);
+            padding: 12px 16px 24px 16px;
+            display: flex;
+            justify-content: space-around;
+            /* Changed from space-between to space-around for better spacing */
+            z-index: 50;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            alignItems: center;
+            color: var(--text-secondary);
+            cursor: pointer;
+            min-width: 48px;
+        }
+
+        .nav-item.active {
+            color: var(--text-primary);
+        }
+
+        body.theme-surprise .nav-item.active {
+            color: var(--accent-primary);
+            text-shadow: 0 0 5px var(--accent-primary);
+        }
+
+        .nav-label {
+            font-size: 10px;
+            margin-top: 4px;
+            font-weight: 500;
+        }
+
+        /* Plus Button */
+        .plus-btn {
+            width: 36px;
+            height: 36px;
+            background: var(--light-teal);
+            border-radius: 8px;
+            color: var(--accent-primary);
+            border: none;
+            display: flex;
+            alignItems: center;
+            justifyContent: center;
+            cursor: pointer;
+        }
+
+        /* Pro Badge */
+        .pro-badge {
+            background: var(--pro-badge-bg);
+            color: var(--pro-badge-text);
+            font-size: 10px;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-weight: 700;
+            display: flex;
+            alignItems: center;
+            gap: 4;
+        }
+
+        /* Trial Timer - Clickable */
+        .trial-timer {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--accent-primary);
+            background: var(--light-teal);
+            padding: 4px 12px;
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        // --- Icons ---
+        const Icons = {
+            Scan: () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 7V5a2 2 0 0 1 2-2h2" /><path d="M17 3h2a2 2 0 0 1 2 2v2" /><path d="M21 17v2a2 2 0 0 1-2 2h-2" /><path d="M7 21H5a2 2 0 0 1-2-2v-2" /><rect x="7" y="7" width="10" height="10" rx="1" /></svg>,
+            Bell: () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" /><path d="M13.73 21a2 2 0 0 1-3.46 0" /></svg>,
+            Settings: () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" /></svg>,
+            Swap: () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M16 3l4 4-4 4" /><path d="M20 7H4" /><path d="M8 21l-4-4 4-4" /><path d="M4 17h16" /></svg>,
+            Buy: () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10" /><circle cx="12" cy="12" r="3" /></svg>,
+            Stake: () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="2" /><circle cx="19" cy="12" r="2" /><circle cx="5" cy="12" r="2" /><circle cx="12" cy="5" r="2" /></svg>,
+            Send: () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 2l-7 20-4-9-9-4 20-7z" /><path d="M22 2L11 13" /></svg>,
+            Sort: () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="12" y1="5" x2="12" y2="19" /><polyline points="19 12 12 19 5 12" /></svg>,
+            Plus: () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>,
+            ChevronRight: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="m9 18 6-6-6-6" /></svg>,
+            Home: () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /></svg>,
+            Discover: () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10" /><line x1="2" y1="12" x2="22" y2="12" /><line x1="12" y1="2" x2="12" y2="22" /><circle cx="12" cy="12" r="3" /></svg>,
+            Menu: () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="18" x2="21" y2="18" /></svg>,
+            Users: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>,
+            Bank: () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 21h18" /><path d="M5 21v-7" /><path d="M19 21v-7" /><path d="M10 9L3 21" /><path d="M14 9l7 12" /><rect x="2" y="3" width="20" height="5" /></svg>,
+            Card: () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2" /><line x1="1" y1="10" x2="23" y2="10" /></svg>,
+            NFT: () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2l9 4.9V17L12 22l-9-4.9V7z" /></svg>,
+            Transfer: () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="6" width="20" height="12" rx="2" /><path d="M12 12h.01" /></svg>,
+            Download: () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></svg>,
+            Mail: () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="4" width="20" height="16" rx="2" /><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" /></svg>,
+            Star: () => <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" /></svg>,
+            Palette: () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10c.88 0 1.5-.67 1.5-1.5 0-.4-.15-.74-.42-1.01-.27-.27-.42-.61-.42-1.01 0-.88.67-1.5 1.5-1.5H16c3.86 0 7-3.14 7-7 0-3.86-3.14-7-7-7z" /><circle cx="6.5" cy="7.5" r="1.5" /><circle cx="10.5" cy="5.5" r="1.5" /><circle cx="14.5" cy="5.5" r="1.5" /><circle cx="17.5" cy="9.5" r="1.5" /></svg>,
+            Clock: () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>,
+            Check: () => <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#20c997" strokeWidth="3"><polyline points="20 6 9 17 4 12" /></svg>
+        };
+
+        // --- Shared Components ---
+
+        const Nav = ({ activeTab, onTabChange }) => (
+            <div className="nav-bar">
+                <div className={`nav-item ${activeTab === 'home' ? 'active' : ''}`} onClick={() => onTabChange('home')}>
+                    <Icons.Home />
+                    <span className="nav-label">Home</span>
+                </div>
+                <div className={`nav-item ${activeTab === 'discover' ? 'active' : ''}`} onClick={() => onTabChange('discover')}>
+                    <Icons.Discover />
+                    <span className="nav-label">Discover</span>
+                </div>
+                <div className={`nav-item ${activeTab === 'swap' ? 'active' : ''}`} onClick={() => onTabChange('swap')}>
+                    <Icons.Swap />
+                    <span className="nav-label">Swap</span>
+                </div>
+                <div className={`nav-item ${activeTab === 'stake' ? 'active' : ''}`} onClick={() => onTabChange('stake')}>
+                    <Icons.Stake />
+                    <span className="nav-label">Stake</span>
+                </div>
+                <div className={`nav-item ${activeTab === 'menu' ? 'active' : ''}`} onClick={() => onTabChange('menu')}>
+                    <Icons.Menu />
+                    <span className="nav-label">Menu</span>
+                </div>
+            </div>
+        );
+
+        // --- Home Components ---
+        const Chart = () => (
+            <div className="chart-container">
+                <svg className="chart-svg" viewBox="0 0 350 160" preserveAspectRatio="none">
+                    <defs>
+                        <linearGradient id="chartGradient" x1="0" x2="0" y1="0" y2="1">
+                            <stop offset="0%" stopColor="var(--accent-primary)" stopOpacity="0.2" />
+                            <stop offset="100%" stopColor="var(--accent-primary)" stopOpacity="0" />
+                        </linearGradient>
+                    </defs>
+                    <path d="M0,120 C30,130 60,90 90,110 C120,130 150,70 180,50 C210,30 240,60 270,50 C300,40 330,30 350,10 V160 H0 Z" fill="url(#chartGradient)" />
+                    <path d="M0,120 C30,130 60,90 90,110 C120,130 150,70 180,50 C210,30 240,60 270,50 C300,40 330,30 350,10" fill="none" stroke="var(--accent-primary)" strokeWidth="2.5" />
+                </svg>
+            </div>
+        );
+
+        const AccountItem = ({ icon, title, sub, balance, subBalance, isActive, isPortal, isPro, onClick, isProActive }) => {
+            const cardClass = isPortal
+                ? `card portal-card ${isActive ? 'active' : ''}`
+                : `card`;
+
+            // If Pro is active, even if it's the virtual account, it should look "active"/normal but with the star
+            const displayTitle = (isPro && isProActive) ? "Virtual Account" : title;
+            const displaySub = (isPro && isProActive) ? "Checking • PRO" : sub;
+
+            return (
+                <div className={cardClass} onClick={onClick} style={{ marginBottom: '12px', display: 'flex', flexDirection: 'row', padding: '16px', alignItems: 'center', position: 'relative' }}>
+                    {isPro && (
+                        <div style={{
+                            position: 'absolute',
+                            top: -8,
+                            right: -8,
+                            width: 24,
+                            height: 24,
+                            background: 'var(--card-bg)',
+                            borderRadius: '50%',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            boxShadow: 'var(--shadow)',
+                            color: '#FAB005'
+                        }}>
+                            <Icons.Star />
+                        </div>
+                    )}
+                    <div className={isActive ? "portal-icon" : "portal-icon"} style={{ background: isPortal && isActive ? 'var(--light-teal)' : (icon === "user" ? "#c2255c" : "var(--bg-color)") }}>
+                        {icon === "user" ? (
+                            <div className="account-icon-pink" style={{ width: 40, height: 40, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                <Icons.Users />
+                                <div className="badge-count">3</div>
+                            </div>
+                        ) : (
+                            <div style={{ color: isActive && isPortal ? 'var(--accent-primary)' : 'var(--text-secondary)' }}>{icon}</div>
+                        )}
+                    </div>
+
+                    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                <span style={{ fontWeight: 600, color: (isPortal && !isActive && !isProActive) ? 'var(--text-secondary)' : 'var(--text-primary)', marginBottom: 2 }}>{displayTitle}</span>
+                                {isPortal && !isActive && !isProActive ? (
+                                    <span style={{ fontSize: 13, color: 'var(--accent-primary)', fontWeight: 600 }}>Click to Activate</span>
+                                ) : (
+                                    <span style={{ fontSize: 13, color: 'var(--text-secondary)' }}>{displaySub}</span>
+                                )}
+                            </div>
+
+                            {(isActive || (!isPortal) || isProActive) ? (
+                                <div style={{ textAlign: 'right' }}>
+                                    <div style={{ fontWeight: 600 }}>{balance}</div>
+                                    <div style={{ fontSize: 13, color: 'var(--text-secondary)' }}>{subBalance}</div>
+                                </div>
+                            ) : (
+                                <div style={{ color: '#adb5bd' }}>
+                                    <Icons.Plus />
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const HomeScreen = ({ portals, onPortalClick, onProClick, isPro, trialDays, onTimerClick }) => (
+            <div style={{ paddingBottom: 80 }}>
+                {/* Header */}
+                <div className="p-4 flex row between center" style={{ paddingTop: 60 }}>
+                    <div>
+                        <div style={{ fontSize: 13, color: 'var(--text-secondary)', marginBottom: 4 }}>Portfolio Value <span style={{ border: '1px solid #dee2e6', borderRadius: '50%', width: 14, height: 14, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: 10 }}>i</span></div>
+                        <h1 style={{ marginBottom: 8 }}>$107,114.72</h1>
+                        <div className="flex row center gap-2" style={{ justifyContent: 'flex-start', color: 'var(--accent-primary)', fontWeight: 600 }}>
+                            <span style={{ fontSize: 12 }}>▲</span> <span style={{ fontSize: 14 }}>≈ $50,413.95 +$16.02 (20.24%)</span>
+                        </div>
+                    </div>
+                    <div className="flex col gap-4" style={{ alignItems: 'flex-end', height: '100%', justifyContent: 'flex-start', marginBottom: 'auto' }}>
+                        <div className="flex row gap-2">
+                            <div className="icon-btn-sm"><Icons.Scan /></div>
+                            <div className="icon-btn-sm"><Icons.Bell /></div>
+                        </div>
+                        {isPro && (
+                            <div className="trial-timer" onClick={onTimerClick}>
+                                <Icons.Clock /> {trialDays === 'PRO' ? 'PRO' : `${trialDays}d Left`}
+                            </div>
+                        )}
+                    </div>
+                </div>
+
+                <Chart />
+
+                {/* Time Filters Mock */}
+                <div className="flex row center gap-4 mb-4">
+                    <span style={{ background: 'var(--card-bg)', padding: '6px 16px', borderRadius: 12, fontSize: 13, fontWeight: 600 }}>1W</span>
+                    <span style={{ color: 'var(--text-secondary)', fontSize: 13, fontWeight: 600 }}>1M</span>
+                    <span style={{ color: 'var(--text-secondary)', fontSize: 13, fontWeight: 600 }}>1Y</span>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex row between p-4" style={{ paddingTop: 16 }}>
+                    <div className="action-item">
+                        <button className="circle-btn" style={{ background: 'var(--text-primary)', color: 'var(--bg-color)' }}><Icons.Swap /></button>
+                        <span className="label">Swap</span>
+                    </div>
+                    <div className="action-item">
+                        <button className="circle-btn"><Icons.Buy /></button>
+                        <span className="label">Buy/Sell</span>
+                    </div>
+                    <div className="action-item">
+                        <button className="circle-btn"><Icons.Stake /></button>
+                        <span className="label">Stake</span>
+                    </div>
+                    <div className="action-item">
+                        <button className="circle-btn"><Icons.Send /></button>
+                        <span className="label">Send</span>
+                    </div>
+                </div>
+
+                {/* Accounts List */}
+                <div className="p-4" style={{ minHeight: '300px' }}>
+                    <div className="flex row between center" style={{ marginBottom: 16 }}>
+                        <h2>Accounts</h2>
+                        <div className="flex row center gap-4">
+                            <span style={{ color: 'var(--accent-primary)', fontWeight: 600, display: 'flex', alignItems: 'center', gap: 4, fontSize: 14 }}><Icons.Sort /> Sort</span>
+                            <button className="plus-btn"><Icons.Plus /></button>
+                        </div>
+                    </div>
+
+                    <AccountItem
+                        icon="user"
+                        title="Joint Account"
+                        sub="DUA4...2ETI"
+                        balance="$25,069.72"
+                        subBalance="$13,431.15"
+                        isActive={true}
+                        isPortal={false}
+                    />
+
+                    {/* Portals */}
+                    <AccountItem
+                        icon={<Icons.Bank />}
+                        // Use portal props normally, but override for Pro display
+                        title={portals.bank.active ? "Virtual Account" : "Virtual Bank Account"}
+                        sub={portals.bank.active ? "Checking • 8832" : "Open a new account"}
+                        balance={portals.bank.balance}
+                        subBalance={portals.bank.sub}
+                        isActive={portals.bank.active}
+                        isPortal={true}
+                        isPro={true}
+                        isProActive={isPro} // Controls if it looks active due to Pro mode
+                        onClick={() => isPro ? null : onProClick('Virtual Bank Account')}
+                    />
+                    <AccountItem
+                        icon={<Icons.Card />}
+                        title={portals.card.active ? "Debit Card" : "Crypto Debit Card"}
+                        sub={portals.card.active ? "Active • 4421" : "Get your physical card"}
+                        balance={portals.card.balance}
+                        subBalance={portals.card.sub}
+                        isActive={portals.card.active}
+                        isPortal={true}
+                        onClick={() => !portals.card.active && onPortalClick('card')}
+                    />
+                </div>
+            </div>
+        );
+
+        // --- Menu Screen Components ---
+        const MenuScreen = ({ portals, isPro, onPortalClick, onProClick, onThemeSelect, currentTheme }) => {
+            const isBankActive = portals.bank.active || isPro; // Bank is active if Pro is active
+
+            const themes = ['default', 'space', 'gold', 'silver', 'skateboard', 'surprise'];
+
+            return (
+                <div style={{ padding: 24, paddingBottom: 80, paddingTop: 60 }}>
+                    <div className="flex row between center mb-4">
+                        <h2>Menu</h2>
+                        <div className="flex row gap-2">
+                            <div className="icon-btn-sm"><Icons.Scan /></div>
+                            <div className="icon-btn-sm"><Icons.Settings /></div>
+                        </div>
+                    </div>
+
+                    {/* Dynamic Banner */}
+                    {/* Cards Banner */}
+                    <div className="menu-banner mb-4">
+                        <div style={{ position: 'absolute', top: 0, right: 0, width: 140, height: 140, opacity: 1 }}>
+                            {/* Abstract Cards Illustration */}
+                            <svg width="100%" height="100%" viewBox="0 0 100 100">
+                                <rect x="30" y="20" width="60" height="80" rx="4" fill="#ffd43b" transform="rotate(15 60 60)" stroke="#1a1b1e" strokeWidth="1.5" />
+                                <rect x="10" y="20" width="60" height="80" rx="4" fill="#74c0fc" transform="rotate(-10 40 60)" stroke="#1a1b1e" strokeWidth="1.5" />
+                            </svg>
+                        </div>
+
+                        <div style={{ position: 'relative', zIndex: 2, maxWidth: '65%' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', marginBottom: 8 }}>
+                                <Icons.Card />
+                                <span style={{ marginLeft: 8, fontWeight: 600 }}>Cards</span>
+                            </div>
+
+                            {portals.card.active ? (
+                                <>
+                                    <h3 style={{ fontSize: 20, marginBottom: 4, lineHeight: 1.2 }}>Crypto Debit CardActive</h3>
+                                    <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 12 }}>{portals.card.balance}</div>
+                                    <button style={{
+                                        background: 'var(--text-primary)', color: 'var(--bg-color)', border: 'none', padding: '10px 16px',
+                                        borderRadius: 8, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', fontSize: 13
+                                    }}>
+                                        Manage Card <span style={{ marginLeft: 8 }}>→</span>
+                                    </button>
+                                </>
+                            ) : (
+                                <>
+                                    <p style={{ color: 'var(--text-secondary)', marginBottom: 16, lineHeight: 1.4, fontSize: 14 }}>
+                                        Get the world's first web3 Mastercard.
+                                    </p>
+                                    <button onClick={() => onPortalClick('card')} style={{
+                                        background: 'var(--text-primary)', color: 'var(--bg-color)', border: 'none', padding: '10px 16px',
+                                        borderRadius: 8, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center'
+                                    }}>
+                                        <span style={{ marginRight: 8, fontSize: 16 }}>+</span> Create Pera Card
+                                    </button>
+                                </>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Virtual Bank Banner - New Section */}
+                    {(!portals.bank.active && !isPro) && (
+                        <div className="menu-banner mb-4" style={{ background: '#e6fcf5' }}>
+                            <div style={{ position: 'absolute', top: 0, right: 0, width: 140, height: 140, opacity: 1 }}>
+                                <svg width="100%" height="100%" viewBox="0 0 100 100">
+                                    <circle cx="70" cy="40" r="30" fill="#20c997" opacity="0.2" />
+                                    <rect x="40" y="40" width="40" height="40" rx="2" fill="#fff" stroke="#20c997" strokeWidth="1.5" transform="rotate(-5 60 60)" />
+                                    <path d="M40 40 L60 20 L80 40" fill="#20c997" stroke="#1a1b1e" strokeWidth="1.5" transform="rotate(-5 60 60)" />
+                                </svg>
+                            </div>
+                            <div style={{ position: 'relative', zIndex: 2, maxWidth: '65%' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', marginBottom: 8, color: '#0ca678' }}>
+                                    <Icons.Bank />
+                                    <span style={{ marginLeft: 8, fontWeight: 600 }}>Banking</span>
+                                </div>
+                                <p style={{ color: '#0ca678', marginBottom: 16, lineHeight: 1.4, fontSize: 14 }}>
+                                    Open a virtual account in seconds.
+                                </p>
+                                <button onClick={() => onProClick('Virtual Bank Account')} style={{
+                                    background: '#0ca678', color: '#fff', border: 'none', padding: '10px 16px',
+                                    borderRadius: 8, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center'
+                                }}>
+                                    <span style={{ marginRight: 8, fontSize: 16 }}>+</span> Create Account (PRO)
+                                </button>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* THEMES SECTION - PRO */}
+                    <div style={{ marginBottom: 16 }}>
+                        <h3 style={{ marginLeft: 4, marginBottom: 8, color: 'var(--text-secondary)' }}>Appearance</h3>
+                        <div className="menu-item" onClick={() => isPro ? null : onProClick('Themes')} style={{ flexDirection: 'column', alignItems: 'flex-start' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center', marginBottom: isPro ? 12 : 0 }}>
+                                <div className="flex row center">
+                                    <div className="menu-icon"><Icons.Palette /></div>
+                                    <span style={{ fontWeight: 500 }}>App Themes</span>
+                                </div>
+                                {!isPro && (
+                                    <div className="pro-badge">
+                                        PRO <Icons.Star />
+                                    </div>
+                                )}
+                            </div>
+
+                            {isPro && (
+                                <div style={{ display: 'flex', gap: 8, overflowX: 'auto', width: '100%', paddingBottom: 4 }}>
+                                    {themes.map(theme => (
+                                        <button
+                                            key={theme}
+                                            onClick={(e) => { e.stopPropagation(); onThemeSelect(theme); }}
+                                            style={{
+                                                padding: '8px 12px',
+                                                borderRadius: 20,
+                                                border: currentTheme === theme ? '2px solid var(--accent-primary)' : '1px solid var(--nav-border)',
+                                                background: currentTheme === theme ? 'var(--light-teal)' : 'transparent',
+                                                color: currentTheme === theme ? 'var(--accent-primary)' : 'var(--text-secondary)',
+                                                fontWeight: 600,
+                                                fontSize: 12,
+                                                cursor: 'pointer',
+                                                textTransform: 'capitalize',
+                                                whiteSpace: 'nowrap'
+                                            }}
+                                        >
+                                            {theme}
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+                    <h3 style={{ marginLeft: 4, marginBottom: 8, color: 'var(--text-secondary)' }}>Tools</h3>
+
+                    {/* Menu List */}
+                    <div className="menu-item" onClick={() => onProClick('Bulk Tools')}>
+                        <div className="flex row center">
+                            <div className="menu-icon"><Icons.NFT /></div>
+                            <span style={{ fontWeight: 500 }}>Bulk Tools</span>
+                        </div>
+                        <div className="flex row center gap-2">
+                            <div className="pro-badge">
+                                PRO <Icons.Star />
+                            </div>
+                            <Icons.ChevronRight />
+                        </div>
+                    </div>
+
+                    <div className="menu-item">
+                        <div className="flex row center"><div className="menu-icon"><Icons.NFT /></div> <span style={{ fontWeight: 500 }}>NFTs</span></div>
+                        <Icons.ChevronRight />
+                    </div>
+                    <div className="menu-item">
+                        <div className="flex row center">
+                            <div className="menu-icon"><Icons.Transfer /></div>
+                            <span style={{ fontWeight: 500 }}>Transfer</span>
+                            <span style={{ background: 'var(--accent-secondary)', color: 'var(--bg-color)', fontSize: 10, padding: '2px 6px', borderRadius: 4, marginLeft: 8, fontWeight: 700 }}>NEW</span>
+                        </div>
+                        <Icons.ChevronRight />
+                    </div>
+                    <div className="menu-item">
+                        <div className="flex row center"><div className="menu-icon"><Icons.Buy /></div> <span style={{ fontWeight: 500 }}>Buy Algo</span></div>
+                        <Icons.ChevronRight />
+                    </div>
+                    <div className="menu-item">
+                        <div className="flex row center"><div className="menu-icon"><Icons.Download /></div> <span style={{ fontWeight: 500 }}>Receive</span></div>
+                        <Icons.ChevronRight />
+                    </div>
+                    <div className="menu-item">
+                        <div className="flex row center"><div className="menu-icon"><Icons.Mail /></div> <span style={{ fontWeight: 500 }}>Invite Friends</span></div>
+                        <Icons.ChevronRight />
+                    </div>
+                </div>
+            );
+        };
+
+        const SignUpScreen = ({ type, onClose, onConfirm }) => {
+            return (
+                <div className="signup-overlay">
+                    <div style={{ flex: 1, background: 'rgba(0,0,0,0.4)' }} onClick={onClose}></div>
+                    <div style={{ background: '#fff', borderRadius: '24px 24px 0 0', padding: 24, animation: 'slideUp 0.3s' }}>
+                        <div style={{ width: 40, height: 4, background: '#e9ecef', borderRadius: 2, margin: '0 auto 24px auto' }}></div>
+                        <div style={{ marginBottom: 24 }}>
+                            <div style={{ width: 60, height: 60, background: '#e6fcf5', borderRadius: '50%', color: '#20c997', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}>
+                                {type === 'bank' ? <Icons.Bank /> : <Icons.Card />}
+                            </div>
+                            <h2 style={{ fontSize: 24, marginBottom: 8, color: '#000' }}>{type === 'bank' ? 'Create Virtual Account' : 'Order Debit Card'}</h2>
+                            <p style={{ color: '#868e96', lineHeight: 1.5 }}>
+                                {type === 'bank'
+                                    ? "Open a virtual bank account in seconds. Send and receive funds globally with zero fees."
+                                    : "Get your Pera Crypto Debit Card and spend your crypto anywhere Mastercard is accepted."}
+                            </p>
+                        </div>
+                        <button className="btn-primary" onClick={onConfirm} style={{ background: '#1a1b1e', color: '#fff' }}>
+                            Create Account
+                        </button>
+                    </div>
+                </div>
+            );
+        };
+
+        const ProModal = ({ onClose, onStartTrial }) => {
+            return (
+                <div className="signup-overlay">
+                    <div style={{ flex: 1, background: 'rgba(0,0,0,0.4)' }} onClick={onClose}></div>
+                    <div style={{ background: '#fff', borderRadius: '24px 24px 0 0', padding: '32px 24px', animation: 'slideUp 0.3s' }}>
+                        <div style={{ width: 40, height: 4, background: '#e9ecef', borderRadius: 2, margin: '0 auto 24px auto' }}></div>
+
+                        <div style={{ textAlign: 'center', marginBottom: 32 }}>
+                            <div style={{
+                                width: 80,
+                                height: 80,
+                                background: '#FFF9DB',
+                                borderRadius: '50%',
+                                color: '#FAB005',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                margin: '0 auto 16px auto'
+                            }}>
+                                <Icons.Star />
+                            </div>
+                            <h2 style={{ fontSize: 28, marginBottom: 8, color: '#000' }}>Pera Pro</h2>
+                            <p style={{ color: '#868e96', fontSize: 16 }}>
+                                Unlock premium themes and features.
+                            </p>
+                        </div>
+
+                        <div style={{ marginBottom: 32, color: '#000' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', marginBottom: 16 }}>
+                                <div style={{ color: '#20c997', marginRight: 12 }}><Icons.Palette /></div>
+                                <span style={{ fontSize: 16, fontWeight: 500 }}>Premium Themes (Space, Gold+)</span>
+                            </div>
+                            <div style={{ display: 'flex', alignItems: 'center', marginBottom: 16 }}>
+                                <div style={{ color: '#20c997', marginRight: 12 }}><Icons.Sort /></div>
+                                <span style={{ fontSize: 16, fontWeight: 500 }}>Advanced Portfolio Analytics</span>
+                            </div>
+                            <div style={{ display: 'flex', alignItems: 'center', marginBottom: 16 }}>
+                                <div style={{ color: '#20c997', marginRight: 12 }}><Icons.Sort /></div>
+                                <span style={{ fontSize: 16, fontWeight: 500 }}>Bulk Transactions Tool</span>
+                            </div>
+                        </div>
+
+                        <div style={{ textAlign: 'center', marginBottom: 24 }}>
+                            <span style={{ fontSize: 32, fontWeight: 700, color: '#000' }}>$5</span><span style={{ color: '#868e96' }}>/mo</span>
+                            <div style={{ color: '#FAB005', fontWeight: 600, fontSize: 14, marginTop: 4 }}>7 Days Free Trial</div>
+                        </div>
+
+                        <button className="btn-primary" onClick={onStartTrial} style={{ background: '#1a1b1e', color: '#fff', marginBottom: 12 }}>
+                            Start Free Trial
+                        </button>
+                        <button onClick={onClose} style={{
+                            background: 'transparent',
+                            border: 'none',
+                            width: '100%',
+                            padding: 16,
+                            color: '#868e96',
+                            fontWeight: 600,
+                            cursor: 'pointer'
+                        }}>
+                            Maybe Later
+                        </button>
+                    </div>
+                </div>
+            );
+        };
+
+        const RenewalModal = ({ onClose, onRenew }) => {
+            return (
+                <div className="signup-overlay">
+                    <div style={{ flex: 1, background: 'rgba(0,0,0,0.4)' }} onClick={onClose}></div>
+                    <div style={{ background: '#fff', borderRadius: '24px 24px 0 0', padding: '32px 24px', animation: 'slideUp 0.3s' }}>
+                        <div style={{ width: 40, height: 4, background: '#e9ecef', borderRadius: 2, margin: '0 auto 24px auto' }}></div>
+
+                        <div style={{ textAlign: 'center', marginBottom: 32 }}>
+                            <div style={{
+                                width: 80,
+                                height: 80,
+                                background: '#e6fcf5',
+                                borderRadius: '50%',
+                                color: '#20c997',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                margin: '0 auto 16px auto'
+                            }}>
+                                <Icons.Check />
+                            </div>
+                            <h2 style={{ fontSize: 24, marginBottom: 8, color: '#000' }}>Love using Pera Pro?</h2>
+                            <p style={{ color: '#868e96', fontSize: 16 }}>
+                                Keep your premium themes and advanced analytics by renewing today.
+                            </p>
+                        </div>
+
+                        <div style={{ textAlign: 'center', marginBottom: 24 }}>
+                            <span style={{ fontSize: 32, fontWeight: 700, color: '#000' }}>$5</span><span style={{ color: '#868e96' }}>/mo</span>
+                        </div>
+
+                        <button className="btn-primary" onClick={onRenew} style={{ background: '#1a1b1e', color: '#fff', marginBottom: 12 }}>
+                            Renew Subscription
+                        </button>
+                        <button onClick={onClose} style={{
+                            background: 'transparent',
+                            border: 'none',
+                            width: '100%',
+                            padding: 16,
+                            color: '#868e96',
+                            fontWeight: 600,
+                            cursor: 'pointer'
+                        }}>
+                            Not Now
+                        </button>
+                    </div>
+                </div>
+            );
+        };
+
+        // --- Main App ---
+        const App = () => {
+            const [activeTab, setActiveTab] = React.useState('home');
+            const [portals, setPortals] = React.useState({
+                bank: { active: false, balance: "$2,000.00", sub: "$0.00" },
+                card: { active: false, balance: "$850.50", sub: "$120.00 pending" }
+            });
+            const [signupType, setSignupType] = React.useState(null);
+
+            // Pro State
+            const [isPro, setIsPro] = React.useState(false);
+            const [showProModal, setShowProModal] = React.useState(false);
+            const [showRenewalModal, setShowRenewalModal] = React.useState(false);
+            const [currentTheme, setCurrentTheme] = React.useState('default');
+            const [trialDays, setTrialDays] = React.useState(7);
+
+            const handleRenewal = () => {
+                setShowRenewalModal(false);
+                setTrialDays('PRO'); // Replaces countdown with static badge
+            };
+
+            // Effect to handle Body Class for Themes
+            React.useEffect(() => {
+                document.body.className = `theme-${currentTheme}`;
+            }, [currentTheme]);
+
+            const handlePortalClick = (type) => {
+                setSignupType(type);
+            };
+
+            const confirmSignup = () => {
+                if (!signupType) return;
+                setPortals(prev => ({
+                    ...prev,
+                    [signupType]: { ...prev[signupType], active: true }
+                }));
+                setSignupType(null);
+            };
+
+            const startTrial = () => {
+                setIsPro(true);
+                setShowProModal(false);
+                setCurrentTheme('space');
+                setPortals(prev => ({
+                    ...prev,
+                    bank: { ...prev.bank, active: true }
+                }));
+            };
+
+            const handleProClick = (feature) => {
+                if (isPro && feature === 'Themes') {
+                    if (activeTab !== 'menu') setActiveTab('menu');
+                    return;
+                }
+                if (isPro && feature === 'Virtual Bank Account') return;
+
+                if (!isPro) {
+                    setShowProModal(true);
+                } else {
+                    alert(`Accessing Pro Feature: ${feature}`);
+                }
+            };
+
+            return (
+                <div style={{ position: 'relative', minHeight: '100vh' }}>
+
+                    {activeTab === 'home' && (
+                        <HomeScreen
+                            portals={portals}
+                            onPortalClick={handlePortalClick}
+                            onProClick={handleProClick}
+                            isPro={isPro}
+                            trialDays={trialDays}
+                            onTimerClick={() => setShowRenewalModal(true)}
+                        />
+                    )}
+
+                    {activeTab === 'menu' && (
+                        <MenuScreen
+                            portals={portals}
+                            isPro={isPro}
+                            currentTheme={currentTheme}
+                            onPortalClick={handlePortalClick}
+                            onProClick={handleProClick}
+                            onThemeSelect={setCurrentTheme}
+                        />
+                    )}
+
+                    {activeTab === 'discover' && <div className="flex center" style={{ height: '100vh' }}>Discover Screen</div>}
+                    {activeTab === 'swap' && <div className="flex center" style={{ height: '100vh' }}>Swap Screen</div>}
+                    {activeTab === 'stake' && <div className="flex center" style={{ height: '100vh' }}>Stake Screen</div>}
+
+                    <Nav activeTab={activeTab} onTabChange={setActiveTab} />
+
+                    {signupType && (
+                        <SignUpScreen
+                            type={signupType}
+                            onClose={() => setSignupType(null)}
+                            onConfirm={confirmSignup}
+                        />
+                    )}
+
+                    {showProModal && (
+                        <ProModal
+                            onClose={() => setShowProModal(false)}
+                            onStartTrial={startTrial}
+                        />
+                    )}
+
+                    {showRenewalModal && (
+                        <RenewalModal
+                            onClose={() => setShowRenewalModal(false)}
+                            onRenew={handleRenewal}
+                        />
+                    )}
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+
+</html>
